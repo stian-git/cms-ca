@@ -7,85 +7,85 @@ const searchField = document.querySelector("input[type=search]");
 const searchButton = document.querySelector(".aside__search-field button");
 const productFilter = document.querySelector(".filter-container form");
 
-//let currentJacketArray = allJackets;
-let jacketArray = [];
+let currentJacketArray = allJackets;
+
 // Headless WP API :
 
 async function getProducts() {
-    console.log("API v3 attempt: ");
-    let headers = new Headers();
-    headers.set("Authorization", "Basic " + btoa(authConsumerKey + ":" + authConsumerSecret));
-    const getProductsURL = baseUrlCMS + "wp-json/wc/v3/products";
+    console.log("API Attempt: ");
+    const getProductsURL = baseUrlCMS + "wp-json/wc/store/products";
     try {
-        const result = await fetch(getProductsURL, { method: "GET", headers: headers });
+        const result = await fetch(getProductsURL);
         const data = await result.json();
         console.log(data);
-        for (let i = 0; i < data.length; i++) {
-            parseProductAttributes(data, i);
-        }
-        console.log(jacketArray);
-        showJackets();
-        //parseProductAttributes(data, 5);
+        parseProductAttributes(data, 5);
     } catch (error) {
         jacketsContainer.innerHTML =
             "<p>An error occured retrieving the jackets. Please refresh the page to try again.</p>";
         console.log("Unable to retrieve jackets from API: " + error);
     }
 }
-
 getProducts();
 
 function parseProductAttributes(arr, index) {
-    //console.log(arr[index]);
-    // API V3 version:
-    const prodID = arr[index].id;
-    const prodPrice = arr[index].price;
-    const prodPriceCurrency = "NOK";
+    console.log(arr[index]);
+    // Productname
     const prodName = arr[index].name;
-    //console.log(prodName);
     let prodGenderFemale = false;
     let prodGenderMale = false;
-    const prodImage = arr[index].images[0].src.replace(".jpg", "-300x300.jpg");
-    //console.log(prodImage);
-    const prodIsBestBuy = arr[index].featured;
-    //console.log("Bestbuy: " + prodIsBestBuy);
-    const prodShortDesc = arr[index].short_description;
-    //console.log(prodShortDesc);
-    const prodAverageRating = arr[index].average_rating;
-    // V3 Gender:
-
-    if (arr[index].attributes[0].options.length == 2) {
+    console.log(prodName);
+    // Genders:
+    if (arr[index].attributes[0].terms.length == 2) {
+        //console.log("Both genders are present");
         prodGenderFemale = true;
         prodGenderMale = true;
     } else {
-        if (arr[index].attributes[0].options[0] == "female") {
+        //console.log(arr[index].attributes[0].terms[0].name);
+        if (arr[index].attributes[0].terms[0].name == "female") {
             prodGenderFemale = true;
         } else {
             prodGenderMale = true;
         }
     }
-    //console.log("Female: " + prodGenderFemale);
-    //console.log("Male: " + prodGenderMale);
-    // Sizes:
-    let prodSizes = [];
-    arr[index].attributes[1].options.forEach((size) => {
-        prodSizes.push(size.toUpperCase());
-    });
-    //console.log(prodSizes);
+    console.log("Female: " + prodGenderFemale);
+    console.log("Male: " + prodGenderMale);
 
-    jacketArray.push({
-        name: prodName,
-        price: prodPrice,
-        image: prodImage,
-        id: prodID,
-        description: prodShortDesc,
-        featured: prodIsBestBuy,
-        sales: prodIsBestBuy,
-        male: prodGenderMale,
-        female: prodGenderFemale,
-        rating: prodAverageRating,
-        sizes: prodSizes,
+    // Sizes:
+    //console.log("Sizes: ");
+    let prodSizes = [];
+    arr[index].attributes[1].terms.forEach((size) => {
+        prodSizes.push(size.name.toUpperCase());
     });
+    console.log(prodSizes);
+
+    // ProdImage (builds the 300px-url):
+    const prodImage = arr[index].images[0].src.replace(".jpg", "-300x300.jpg");
+    console.log(prodImage);
+    //
+    // Additional images is missing.
+    //
+
+    // Price
+    console.log("Price: ");
+    const prodPrice = arr[index].prices.price;
+    const prodPriceCurrency = arr[index].prices.currency_code;
+    console.log(prodPrice + " " + prodPriceCurrency);
+
+    // ID
+    const prodID = arr[index].id;
+    console.log(prodID);
+
+    // BestBuy-product?
+    let prodIsBestBuy = false;
+    //console.log(arr[index].tags);
+    for (let i = 0; i < arr[index].tags.length; i++) {
+        //console.log(arr[index].tags[i].name);
+        if (arr[index].tags[i].name == "BestBuy") {
+            prodIsBestBuy = true;
+            break;
+        }
+    }
+    console.log("BestBuy: " + prodIsBestBuy);
 }
 
 // disable the searchbutton to avoid resetting filters. (search field got another event)
@@ -95,7 +95,6 @@ searchButton.onclick = function (event) {
 
 /* displays the jackets in the provided array, or all if no filters enabled. */
 function showJackets(arr = allJackets) {
-    console.log(arr);
     jacketsContainer.innerHTML = "";
     jackets = arr;
     if (jackets.length == 0) {
@@ -238,9 +237,115 @@ productFilter.addEventListener("change", updateProductWithFilters);
 searchField.addEventListener("keyup", updateProductWithFilters);
 
 /* if a search query is found in the header, then display the search result*/
-// if (!searchString) {
-//     showJackets();
-// } else {
-//     showJackets(searchProducts(searchString));
-//     searchField.value = searchString;
+if (!searchString) {
+    showJackets();
+} else {
+    showJackets(searchProducts(searchString));
+    searchField.value = searchString;
+}
+
+// Below has been removed:
+
+// async function getProducts() {
+//     console.log("API Attempt: ");
+//     const getProductsURL = baseUrlCMS + "wp-json/wc/store/products";
+//     try {
+//         const result = await fetch(getProductsURL);
+//         const data = await result.json();
+//         console.log(data);
+//         parseProductAttributes(data, 5);
+//     } catch (error) {
+//         jacketsContainer.innerHTML =
+//             "<p>An error occured retrieving the jackets. Please refresh the page to try again.</p>";
+//         console.log("Unable to retrieve jackets from API: " + error);
+//     }
 // }
+// getProducts();
+
+
+// function parseProductAttributes(arr, index) {
+//     console.log(arr[index]);
+//     // API V3 version:
+//     const prodID = arr[index].id;
+//     const prodPrice = arr[index].price;
+//     const prodPriceCurrency = "NOK";
+//     const prodName = arr[index].name;
+//     console.log(prodName);
+//     let prodGenderFemale = false;
+//     let prodGenderMale = false;
+//     const prodImage = arr[index].images[0].src.replace(".jpg", "-300x300.jpg");
+//     console.log(prodImage);
+//     const prodIsBestBuy = arr[index].featured;
+//     console.log("Bestbuy: " + prodIsBestBuy);
+
+//     // V3 Gender:
+
+//     if (arr[index].attributes[0].options.length == 2) {
+//         prodGenderFemale = true;
+//         prodGenderMale = true;
+//     } else {
+//         if (arr[index].attributes[0].options[0] == "female") {
+//             prodGenderFemale = true;
+//         } else {
+//             prodGenderMale = true;
+//         }
+//     }
+//     console.log("Female: " + prodGenderFemale);
+//     console.log("Male: " + prodGenderMale);
+//     // Sizes:
+//     let prodSizes = [];
+//     arr[index].attributes[1].options.forEach((size) => {
+//         prodSizes.push(size.toUpperCase());
+//     });
+//     console.log(prodSizes);
+    // v3 BestBuyProduct
+
+    //API V1 version:
+    //const prodPrice = arr[index].prices.price;
+    //const prodPriceCurrency = arr[index].prices.currency_code;
+
+    // Genders:
+    // if (arr[index].attributes[0].terms.length == 2) {
+    //     //console.log("Both genders are present");
+    //     prodGenderFemale = true;
+    //     prodGenderMale = true;
+    // } else {
+    //     //console.log(arr[index].attributes[0].terms[0].name);
+    //     if (arr[index].attributes[0].terms[0].name == "female") {
+    //         prodGenderFemale = true;
+    //     } else {
+    //         prodGenderMale = true;
+    //     }
+    // }
+
+    // Sizes:
+    // let prodSizes = [];
+    // arr[index].attributes[1].terms.forEach((size) => {
+    //     prodSizes.push(size.name.toUpperCase());
+    // });
+
+    // ProdImage (builds the 300px-url):
+
+    //
+    // Additional images is missing.
+    //
+
+    // Price
+    //console.log("Price: ");
+
+    //console.log(prodPrice + " " + prodPriceCurrency);
+
+    // ID
+
+    //console.log(prodID);
+
+    // BestBuy-product?
+    // let prodIsBestBuy = false;
+    // for (let i = 0; i < arr[index].tags.length; i++) {
+    //     if (arr[index].tags[i].name == "BestBuy") {
+    //         prodIsBestBuy = true;
+    //         break;
+    //     }
+    // }
+    //console.log("BestBuy: " + prodIsBestBuy);
+}
