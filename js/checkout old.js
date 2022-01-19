@@ -217,9 +217,7 @@ const basketSummaryContainer = document.querySelector(".basket__summary");
 const basketHeader = document.querySelector(".basket h2");
 
 // Collect items from the basket and prepare the data to be displayed.
-function getJacketsInBasket(allJackets) {
-    console.log("getJacketsInBasket(): ");
-    console.log(allJackets);
+function getJacketsInBasket() {
     let totalPrice = 0;
     basketItemContainer.innerHTML = `<tr class="rowheader">
   <td class="name basket_headertext">Name</td>
@@ -245,24 +243,16 @@ function getJacketsInBasket(allJackets) {
         let itemPrice;
         let itemThumb;
         let itemGender;
-        // New productObject, replacing alljackets.
-
-        //console.log(allJackets);
-        //console.log(basketArray);
         basketArray.forEach((item, i) => {
             itemId = item.match(/^\w+/)[0];
-            const currentJacketData = allJackets.filter((jacket) => jacket.id == itemId);
-            //console.log(item);
-            //console.log(currentJacketData);
             arrayIdx = Number(itemId) - 1;
-            //console.log(currentJacketData[0].price);
-            itemPrice = Number(currentJacketData[0].price).toFixed(2);
-            itemName = currentJacketData[0].name;
-            itemThumb = currentJacketData[0].images[0].src.replace(".jpg", "-150x150.jpg");
+            itemPrice = allJackets[arrayIdx].price.toFixed(2);
+            itemName = allJackets[arrayIdx].name;
+            itemThumb = allJackets[arrayIdx].image.replace(".jpg", "-thumb.jpg");
             itemSize = item.split(",")[1].split("-")[1].toUpperCase();
             itemGender = item.split(",")[2];
             itemCount = item.split(",")[3];
-            totalPrice += currentJacketData[0].price * itemCount;
+            totalPrice += allJackets[arrayIdx].price * itemCount;
             let dataToDisplayInBasket = {
                 basketArrayIndex: i,
                 name: itemName,
@@ -280,7 +270,7 @@ function getJacketsInBasket(allJackets) {
     totalPriceContainer.innerHTML = (totalPrice + shipment + invoiceFee).toFixed(2);
 }
 
-//getJacketsInBasket();
+getJacketsInBasket();
 
 // Adds each item to the basket. (populated from GetJacketsInBasket)
 function displayBasketItem(item) {
@@ -343,6 +333,8 @@ function displayBasketItem(item) {
     basketItemContainer.innerHTML += itemHTML;
 }
 
+const deleteButtons = document.querySelectorAll(".deletebutton");
+
 // Removes item from basket when the delete-button is triggered.
 function deleteItem(event) {
     // Identify which item to delete:
@@ -352,13 +344,13 @@ function deleteItem(event) {
     storage.setItem("Basket", basketArray.join(";"));
     reloadAndKeepFormData();
 }
-let deleteButtons;
-// deleteButtons.forEach((element) => {
-//     element.addEventListener("click", deleteItem);
-// });
 
-let addButtons;
-let subtractButtons;
+deleteButtons.forEach((element) => {
+    element.addEventListener("click", deleteItem);
+});
+
+const addButtons = document.querySelectorAll(".addbutton");
+const subtractButtons = document.querySelectorAll(".subtractbutton");
 
 let arr;
 let newArr;
@@ -379,13 +371,13 @@ function subtractItem(event) {
     reloadAndKeepFormData();
 }
 
-// addButtons.forEach((addElement) => {
-//     addElement.addEventListener("click", increaseItem);
-// });
+addButtons.forEach((addElement) => {
+    addElement.addEventListener("click", increaseItem);
+});
 
-// subtractButtons.forEach((subtractElement) => {
-//     subtractElement.addEventListener("click", subtractItem);
-// });
+subtractButtons.forEach((subtractElement) => {
+    subtractElement.addEventListener("click", subtractItem);
+});
 
 // Stores form data to storage when page is refreshed while interacting with the basket.
 function reloadAndKeepFormData() {
@@ -445,30 +437,3 @@ function reValidate() {
     validateTerms();
     checkAllFields();
 }
-
-//console.log("All jackets in basket:");
-
-let jacketData;
-async function getProductData() {
-    jacketData = await getProducts();
-    //console.log(jacketData);
-    getJacketsInBasket(jacketData);
-
-    addButtons = document.querySelectorAll(".addbutton");
-    subtractButtons = document.querySelectorAll(".subtractbutton");
-
-    addButtons.forEach((addElement) => {
-        addElement.addEventListener("click", increaseItem);
-    });
-
-    subtractButtons.forEach((subtractElement) => {
-        subtractElement.addEventListener("click", subtractItem);
-    });
-
-    deleteButtons = document.querySelectorAll(".deletebutton");
-    deleteButtons.forEach((element) => {
-        element.addEventListener("click", deleteItem);
-    });
-}
-
-getProductData();

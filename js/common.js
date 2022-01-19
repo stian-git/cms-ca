@@ -48,6 +48,7 @@ function addOrRemoveFromBasket(num, arr, arridx) {
 let headers = new Headers();
 headers.set("Authorization", "Basic " + btoa(authConsumerKey + ":" + authConsumerSecret));
 
+//const allJackets;
 async function getProducts(id) {
     //console.log("API v3 attempt: ");
 
@@ -59,7 +60,7 @@ async function getProducts(id) {
         try {
             const result = await fetch(getProductsURL, { method: "GET", headers: headers });
             const data = await result.json();
-            //console.log(data);
+            console.log(data);
             return data;
         } catch (error) {
             // jacketsContainer.innerHTML =
@@ -69,10 +70,18 @@ async function getProducts(id) {
     } else {
         try {
             const result = await fetch(getProductsURL, { method: "GET", headers: headers });
-            const data = await result.json();
+            data = await result.json();
             //console.log(data);
-            showJackets(data);
+            console.log;
+            if (document.location.pathname == "/jackets.html") {
+                console.log("This is the jackets-page");
+                showJackets(data);
+            } else {
+                return data;
+            }
+            //showJackets(data);
         } catch (error) {
+            // NB: Below error is not available in the checkout. Maybe missing another place too?
             jacketsContainer.innerHTML =
                 "<p>An error occured retrieving the jackets. Please refresh the page to try again.</p>";
             console.log("Unable to retrieve jackets from API: " + error);

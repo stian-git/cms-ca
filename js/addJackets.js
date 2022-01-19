@@ -11,29 +11,27 @@ const productFilter = document.querySelector(".filter-container form");
 let jacketArray = [];
 // Headless WP API :
 
-async function getProducts() {
-    console.log("API v3 attempt: ");
-    let headers = new Headers();
-    headers.set("Authorization", "Basic " + btoa(authConsumerKey + ":" + authConsumerSecret));
-    const getProductsURL = baseUrlCMS + "wp-json/wc/v3/products";
-    try {
-        const result = await fetch(getProductsURL, { method: "GET", headers: headers });
-        const data = await result.json();
-        console.log(data);
-        for (let i = 0; i < data.length; i++) {
-            parseProductAttributes(data, i);
-        }
-        console.log(jacketArray);
-        showJackets();
-        //parseProductAttributes(data, 5);
-    } catch (error) {
-        jacketsContainer.innerHTML =
-            "<p>An error occured retrieving the jackets. Please refresh the page to try again.</p>";
-        console.log("Unable to retrieve jackets from API: " + error);
-    }
-}
-
-getProducts();
+// async function getProducts() {
+//     console.log("API v3 attempt: ");
+//     let headers = new Headers();
+//     headers.set("Authorization", "Basic " + btoa(authConsumerKey + ":" + authConsumerSecret));
+//     const getProductsURL = baseUrlCMS + "wp-json/wc/v3/products";
+//     try {
+//         const result = await fetch(getProductsURL, { method: "GET", headers: headers });
+//         const data = await result.json();
+//         console.log(data);
+//         for (let i = 0; i < data.length; i++) {
+//             parseProductAttributes(data, i);
+//         }
+//         console.log(jacketArray);
+//         showJackets();
+//         //parseProductAttributes(data, 5);
+//     } catch (error) {
+//         jacketsContainer.innerHTML =
+//             "<p>An error occured retrieving the jackets. Please refresh the page to try again.</p>";
+//         console.log("Unable to retrieve jackets from API: " + error);
+//     }
+// }
 
 function parseProductAttributes(arr, index) {
     //console.log(arr[index]);
@@ -244,3 +242,5 @@ searchField.addEventListener("keyup", updateProductWithFilters);
 //     showJackets(searchProducts(searchString));
 //     searchField.value = searchString;
 // }
+
+//getProducts();

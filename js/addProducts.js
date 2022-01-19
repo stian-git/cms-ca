@@ -83,8 +83,11 @@ function showJackets(jackets) {
 if (!searchString) {
     //showJackets();
     getProducts();
+    //const someProducts = getProducts();
+    //showJackets(getProducts());
+    //showJackets(getProducts);
 } else {
-    getProducts(true);
+    // ADD Search-call here.
     // API with searchfilter:
     searchField.value = searchString;
 }
