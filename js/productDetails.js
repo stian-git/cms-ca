@@ -9,8 +9,9 @@ const jacketName = document.querySelector(".jacketname__h1");
 // clears the size-variables for each run.
 
 async function showProductDetails() {
-    const jacket = await getProducts(jacketId);
+    jacket = await getProducts(jacketId);
     const averageRating = Math.abs(jacket.average_rating);
+    console.log(jacket);
     //console.log("Avg.Rating: " + averageRating);
     let sizeS,
         sizeM,
@@ -65,15 +66,23 @@ async function showProductDetails() {
     });
 
     let thumbsHTML = "";
-    jacket.images.forEach((img) => {
-        thumbsHTML += `<div>
-                            <img src="${img.src.replace(".jpg", "-150x150.jpg")}" alt="${
-            jacket.name
-        }-1" title="Thumb 1, ${
-            jacket.name
-        }" class="thumbimage" onclick="changeProductImage(1)" onerror="this.style.display='none'"/>
-  </div>`;
-    });
+
+    for (let i = 0; i < jacket.images.length; i++) {
+        let thumbImage = jacket.images[i].src.replace(".jpg", "-150x150.jpg");
+        let fullsizeImage = "changeProductImage(`" + jacket.images[i].src.replace(".jpg", "-450x450.jpg") + "`)";
+        thumbsHTML += `
+        <div>
+            <img src="${thumbImage}" alt="${jacket.name}" 
+        class="thumbimage" onclick="${fullsizeImage}" onerror="this.style.display='none'"/>
+        </div>`;
+    }
+    // jacket.images.forEach((img) => {
+    //     //let fullsizeImage = `"${img.src.replace(".jpg", "-450x450.jpg")}"`;
+    //     let fullsizeImage = `onclick="""changeProductImage("${img.src.replace(".jpg", "-450x450.jpg")}""")`;
+    //     console.log(fullsizeImage);
+    //     //console.log(typeof fullsizeImage);
+
+    // });
 
     jacketContainer.innerHTML = `<section class="jacketdetails__images">
 
@@ -137,6 +146,13 @@ async function getReviews(id) {
     } catch (error) {
         console.log("Catching reviews failed, returning empty array");
     }
-    console.log(reviewArray);
+    //console.log(reviewArray);
     return reviewArray;
+}
+
+function changeProductImage(newImg) {
+    const mainImageContainer = document.querySelector(".product-image");
+    mainImageContainer.src = newImg;
+    // Below line is to make the page recover if the selected img is missing.
+    //mainImageContainer.style.display = "inline";
 }
