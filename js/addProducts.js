@@ -11,6 +11,7 @@ const searchField = document.querySelector("input[type=search]");
 const searchButton = document.querySelector(".aside__search-field button");
 const jacketsContainer = document.querySelector(".main__jacketlist");
 const productFilter = document.querySelector(".filter-container form");
+const loaderIcon = document.querySelector(".fa-compact-disc");
 
 function showJackets(jackets, filterUse = false) {
     /* if a search query is found in the header, then display the search result*/
@@ -87,6 +88,7 @@ function showJackets(jackets, filterUse = false) {
     </div>
   </a>`;
     }
+    loaderIcon.style.display = "none";
 }
 
 // disable the searchbutton to avoid resetting filters. (search field got another event)
