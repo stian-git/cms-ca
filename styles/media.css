@@ -1,4 +1,13 @@
-@media only screen and (min-width: 430px) {
+@media only screen and (min-width: 395px) {
+    .mobile_nav {
+        margin: 0px 5px;
+    }
+    .aside__container {
+        border-radius: 25px;
+    }
+    .filter-container {
+        margin: 5px 5px 5px 5px;
+    }
 }
 
 @media only screen and (min-width: 880px) {

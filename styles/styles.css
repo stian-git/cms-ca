@@ -255,7 +255,7 @@ aside {
     position: relative;
     border: 1px solid var(--color_border);
     display: block;
-    border-radius: 25px;
+    border-radius: 0px;
 }
 
 .aside__search {
@@ -428,7 +428,7 @@ ul li {
 /* new small screens nav*/
 
 .mobile_nav {
-    margin: 0px 5px;
+    margin: 0px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -443,6 +443,13 @@ ul li {
     display: flex;
     position: initial;
     margin: 0 20px;
+}
+.mobile_menu ul {
+    width: 100%;
+}
+
+.mobile_menu li {
+    margin: 7px;
 }
 
 /* Common between jacket details and jackets list*/
