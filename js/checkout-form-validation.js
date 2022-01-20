@@ -127,7 +127,7 @@ function validateName(event) {
     const validationField = document.querySelector(".name .fas");
     const helptext = document.querySelector("label[for=name] .helptext");
     const nameLength = 3;
-    if (!lengthCheck(fullName.value, nameLength) || !textOnlyCheck(fullName.value)) {
+    if (!lengthCheck(fullName.value.trim(), nameLength) || !textOnlyCheck(fullName.value.trim())) {
         fullName.classList.add("validationerror");
         toggleValidation(validationField, false);
         helptext.style.display = "block";
@@ -205,7 +205,7 @@ function validateCity(event) {
     const validationField = document.querySelector(".city .fas");
     const helptext = document.querySelector("label[for=city] .helptext");
     const cityLength = 3;
-    if (!lengthCheck(city.value, cityLength) || !textOnlyCheck(city.value)) {
+    if (!lengthCheck(city.value.trim(), cityLength) || !textOnlyCheck(city.value.trim())) {
         city.classList.add("validationerror");
         toggleValidation(validationField, false);
         helptext.style.display = "block";
