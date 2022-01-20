@@ -16,9 +16,6 @@ const totalPriceContainer = document.querySelector(".totalprice");
 let shipment = 7;
 let invoiceFee = 2;
 
-shipmentPriceContainer.innerHTML = shipment.toFixed(2);
-invoiceFeeContainer.innerHTML = invoiceFee.toFixed(2);
-
 // Validations:
 
 function validateEmail(email) {
@@ -218,8 +215,8 @@ const basketHeader = document.querySelector(".basket h2");
 
 // Collect items from the basket and prepare the data to be displayed.
 function getJacketsInBasket(allJackets) {
-    console.log("getJacketsInBasket(): ");
-    console.log(allJackets);
+    //console.log("getJacketsInBasket(): ");
+    //console.log(allJackets);
     let totalPrice = 0;
     basketItemContainer.innerHTML = `<tr class="rowheader">
   <td class="name basket_headertext">Name</td>
@@ -231,6 +228,7 @@ function getJacketsInBasket(allJackets) {
     basketItemContainer.style.display = "none";
     basketSummaryContainer.style.display = "none";
     basketHeader.innerHTML = "Basket (Currently empty)";
+    loaderIcon.style.display = "none";
     // When the basket is not empty:
     if (!storage.getItem("Basket") == "") {
         basketItemContainer.style.display = "table";
@@ -277,6 +275,8 @@ function getJacketsInBasket(allJackets) {
         });
     }
     // Updates the price:
+    shipmentPriceContainer.innerHTML = shipment.toFixed(2);
+    invoiceFeeContainer.innerHTML = invoiceFee.toFixed(2);
     totalPriceContainer.innerHTML = (totalPrice + shipment + invoiceFee).toFixed(2);
 }
 

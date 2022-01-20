@@ -2,6 +2,7 @@ const storage = window.localStorage;
 const baseUrlCMS = "https://tekniskpotet.no/rainydays/";
 const authConsumerKey = "ck_34ff56c60c7369ee8c203d18f5e4f2179b7d596f";
 const authConsumerSecret = "cs_1cd09593ba430b4a32cac4c96362fd75b24e3e1e";
+const loaderIcon = document.querySelector(".fa-compact-disc");
 
 let jacket;
 
