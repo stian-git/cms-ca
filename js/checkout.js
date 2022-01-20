@@ -22,10 +22,11 @@ function getJacketsInBasket(allJackets) {
     // Handle cases where basket is empty:
     basketItemContainer.style.display = "none";
     basketSummaryContainer.style.display = "none";
-    basketHeader.innerHTML = "Basket (Currently empty)";
+    basketHeader.innerHTML = "Basket is currently empty. Please add products to the basket first.";
     loaderIcon.style.display = "none";
     // When the basket is not empty:
     if (!storage.getItem("Basket") == "") {
+        checkOutForm.style.display = "grid";
         basketItemContainer.style.display = "table";
         basketSummaryContainer.style.display = "grid";
         basketHeader.innerHTML = "Basket";

@@ -9,6 +9,9 @@ const city = document.querySelector("#city");
 const country = document.querySelector("#country");
 const termsCheckbox = document.querySelector("#terms");
 
+// Hides the checkout form by default to avoid people typing in form details before any products are in the basket.
+checkOutForm.style.display = "none";
+
 // Disables the submit-button by default.
 const submitButton = document.querySelector("button[type=submit].jacket-cta");
 submitButton.disabled = true;
