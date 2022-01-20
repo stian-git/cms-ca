@@ -113,22 +113,23 @@ function updateProductWithFilters() {
     if (!searchField.value == "") {
         currentJacketArray = searchProducts(searchField.value);
     }
-
-    //console.log(currentJacketArray);
+    console.log(currentJacketArray);
     let selectedGender = document.querySelector("input[name=gender]:checked").value;
     if (selectedGender != "both") {
         currentJacketArray = genderFilter(selectedGender, currentJacketArray);
     }
-    // let sizes = [];
-    // const sizeBoxes = document.querySelectorAll(".filter-container input[type=checkbox]");
-    // sizeBoxes.forEach((size) => {
-    //     if (size.checked) {
-    //         sizes.push(size.value);
-    //     }
-    // });
-    // if (sizes.length != 0) {
-    //     currentJacketArray = sizeFilter(sizes, currentJacketArray);
-    // }
+    console.log("After genderSelection");
+    console.log(currentJacketArray);
+    let sizes = [];
+    const sizeBoxes = document.querySelectorAll(".filter-container input[type=checkbox]");
+    sizeBoxes.forEach((size) => {
+        if (size.checked) {
+            sizes.push(size.value);
+        }
+    });
+    if (sizes.length != 0) {
+        currentJacketArray = sizeFilter(sizes, currentJacketArray);
+    }
     showJackets(currentJacketArray, true);
 }
 
@@ -140,13 +141,16 @@ function genderFilter(gender, arr) {
     let result = [];
     if (gender == "male") {
         for (let i = 0; i < arr.length; i++) {
-            if (arr[i].attributes[0].options == "male") {
+            //console.log(arr[i].attributes[0].options[1]);
+            if (arr[i].attributes[0].options[0] == "male" || arr[i].attributes[0].options[1] == "male") {
+                //console.log(arr[i]);
                 result.push(arr[i]);
             }
         }
     } else {
         for (let j = 0; j < arr.length; j++) {
-            if (arr[j].attributes[0].options == "female") {
+            if (arr[j].attributes[0].options[0] == "female" || arr[j].attributes[0].options[1] == "female") {
+                //console.log(arr[j]);
                 result.push(arr[j]);
             }
         }
@@ -158,12 +162,16 @@ function genderFilter(gender, arr) {
 
 function sizeFilter(sizes, arr) {
     let result = [];
+    console.log("FilterSize:");
+    console.log(sizes);
+    console.log(arr);
     arr.forEach((element) => {
         // Adds - to create a unique syntax.
-        let sizeString = "-" + element.sizes.join("-") + "-";
+        let sizeString = "-" + element.attributes[1].options.join("-") + "-";
         console.log(sizeString);
         for (let k = 0; k < sizes.length; k++) {
-            let sizeMatch = sizeString.search("-" + sizes[k] + "-");
+            console.log("Looking for: " + sizes[k].toLocaleLowerCase());
+            let sizeMatch = sizeString.search("-" + sizes[k].toLocaleLowerCase() + "-");
             if (sizeMatch >= 0) {
                 result.push(element);
                 break;
