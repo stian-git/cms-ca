@@ -345,8 +345,8 @@ input[type="image"]:hover {
     text-decoration: none;
     border-radius: 0px 0px 25px 25px;
     border: 1px solid black;
-    background-color: var(--color_texture_bg);
-    color: var(--color_text);
+    background-color: var(--color_nav);
+    color: black;
 }
 
 .aside__search-field button {
