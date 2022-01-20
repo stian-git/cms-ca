@@ -115,6 +115,11 @@ async function showProductDetails() {
     if (basketCounterContainer.innerHTML == 0) {
         checkoutbutton.style.display = "none";
     }
+
+    // if there is only one gender on this jacket, we select it by default:
+    if (jacket.attributes[0].options.length == 1) {
+        document.querySelector("input[name=gender]").checked = true;
+    }
 }
 
 async function getReviews(id) {

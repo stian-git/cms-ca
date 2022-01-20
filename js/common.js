@@ -37,19 +37,9 @@ function addOrRemoveFromBasket(num, arr, arridx) {
     storage.setItem("Basket", arr.join(";"));
 }
 
-// let jacketArrayV3 = [];
-// let someName = "Cold and Wet";
-// let somePrice = 123;
-// let jacketDetails = {
-//     name: someName,
-//     price: somePrice,
-// };
-// jacketArrayV3.push({ name: someName, price: somePrice });
-// console.log(jacketArrayV3);
 let headers = new Headers();
 headers.set("Authorization", "Basic " + btoa(authConsumerKey + ":" + authConsumerSecret));
 
-//let allJackets;
 async function getProducts(id) {
     let getProductsURL = baseUrlCMS + "wp-json/wc/v3/products";
     // Fetching all jackets like this, makes it probably slow to use the live-search.
@@ -58,7 +48,7 @@ async function getProducts(id) {
         try {
             const result = await fetch(getProductsURL, { method: "GET", headers: headers });
             const data = await result.json();
-            console.log(data);
+            //console.log(data);
             return data;
         } catch (error) {
             // jacketsContainer.innerHTML =
@@ -71,15 +61,7 @@ async function getProducts(id) {
             data = await result.json();
             //console.log(data);
             storage.setItem("AllProducts", JSON.stringify(data));
-            console.log;
-            if (document.location.pathname == "/jackets.html") {
-                console.log("This is the jackets-page");
-                //allJackets = data;
-                showJackets(data);
-            } else {
-                return data;
-            }
-            //showJackets(data);
+            return data;
         } catch (error) {
             // NB: Below error is not available in the checkout. Maybe missing another place too?
             jacketsContainer.innerHTML =

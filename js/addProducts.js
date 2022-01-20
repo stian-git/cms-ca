@@ -1,8 +1,3 @@
-// TODO:
-// - Change the searchParams to use excisting array.
-// - Add filters
-getProducts();
-
 const searchQuery = document.location.search;
 const searchParams = new URLSearchParams(searchQuery);
 const searchString = searchParams.get("q"); // q = search query.
@@ -15,15 +10,12 @@ const productFilter = document.querySelector(".filter-container form");
 function showJackets(jackets, filterUse = false) {
     /* if a search query is found in the header, then display the search result*/
     if (searchString && filterUse == false) {
-        // Here we need to replace AllJackets with the filtered search.
-        // Set searchString to nothing at the end to avoid reusing querystring.
         searchField.value = searchString;
         jackets = searchProducts(searchString);
         searchString.value = null;
     }
     console.log(jackets);
     jacketsContainer.innerHTML = "";
-    //jackets = arr;
     if (jackets.length == 0) {
         jacketsContainer.innerHTML = `<div class="error nojacketstoshow">
                                       <p>0 jackets are currently matching your search and/or filter.</p>
@@ -104,8 +96,6 @@ function searchProducts(str) {
             result.push(arr[i]);
         }
     }
-    //console.log("Searchresult:");
-    //console.log(result);
     return result;
 }
 
@@ -142,16 +132,13 @@ function genderFilter(gender, arr) {
     let result = [];
     if (gender == "male") {
         for (let i = 0; i < arr.length; i++) {
-            //console.log(arr[i].attributes[0].options[1]);
             if (arr[i].attributes[0].options[0] == "male" || arr[i].attributes[0].options[1] == "male") {
-                //console.log(arr[i]);
                 result.push(arr[i]);
             }
         }
     } else {
         for (let j = 0; j < arr.length; j++) {
             if (arr[j].attributes[0].options[0] == "female" || arr[j].attributes[0].options[1] == "female") {
-                //console.log(arr[j]);
                 result.push(arr[j]);
             }
         }
@@ -177,3 +164,7 @@ function sizeFilter(sizes, arr) {
 
     return result;
 }
+
+getProducts().then((allJackets) => {
+    showJackets(allJackets);
+});
