@@ -1,16 +1,26 @@
 // TODO:
 // - Change the searchParams to use excisting array.
 // - Add filters
+getProducts();
 
 const searchQuery = document.location.search;
 const searchParams = new URLSearchParams(searchQuery);
 const searchString = searchParams.get("q"); // q = search query.
 
 const searchField = document.querySelector("input[type=search]");
-
+const searchButton = document.querySelector(".aside__search-field button");
 const jacketsContainer = document.querySelector(".main__jacketlist");
+const productFilter = document.querySelector(".filter-container form");
 
-function showJackets(jackets) {
+function showJackets(jackets, filterUse = false) {
+    /* if a search query is found in the header, then display the search result*/
+    if (searchString && filterUse == false) {
+        // Here we need to replace AllJackets with the filtered search.
+        // Set searchString to nothing at the end to avoid reusing querystring.
+        searchField.value = searchString;
+        jackets = searchProducts(searchString);
+        searchString.value = null;
+    }
     console.log(jackets);
     jacketsContainer.innerHTML = "";
     //jackets = arr;
@@ -20,7 +30,7 @@ function showJackets(jackets) {
                                       <p>Please modify your filter or clear the search field to resume</>
                                   </div>`;
     }
-    for (var i = 0; i < jackets.length; i++) {
+    for (let i = 0; i < jackets.length; i++) {
         let productLink = `<p class="jacket-cta" title="${jackets[i].name}">View</p>`;
         let bestbuyIcon = ``;
         let maleIcon = ``;
@@ -79,15 +89,87 @@ function showJackets(jackets) {
     }
 }
 
-/* if a search query is found in the header, then display the search result*/
-if (!searchString) {
-    //showJackets();
-    getProducts();
-    //const someProducts = getProducts();
-    //showJackets(getProducts());
-    //showJackets(getProducts);
-} else {
-    // ADD Search-call here.
-    // API with searchfilter:
-    searchField.value = searchString;
+// disable the searchbutton to avoid resetting filters. (search field got another event)
+searchButton.onclick = function (event) {
+    event.preventDefault();
+};
+
+/* search product name and filters the result and then displays the result*/
+function searchProducts(str) {
+    let arr = JSON.parse(storage.getItem("AllProducts"));
+    let result = [];
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].name.toLocaleLowerCase().search(str.toLocaleLowerCase()) >= 0) {
+            result.push(arr[i]);
+        }
+    }
+    //console.log("Searchresult:");
+    //console.log(result);
+    return result;
+}
+
+function updateProductWithFilters() {
+    currentJacketArray = JSON.parse(storage.getItem("AllProducts"));
+    if (!searchField.value == "") {
+        currentJacketArray = searchProducts(searchField.value);
+    }
+
+    //console.log(currentJacketArray);
+    let selectedGender = document.querySelector("input[name=gender]:checked").value;
+    if (selectedGender != "both") {
+        currentJacketArray = genderFilter(selectedGender, currentJacketArray);
+    }
+    // let sizes = [];
+    // const sizeBoxes = document.querySelectorAll(".filter-container input[type=checkbox]");
+    // sizeBoxes.forEach((size) => {
+    //     if (size.checked) {
+    //         sizes.push(size.value);
+    //     }
+    // });
+    // if (sizes.length != 0) {
+    //     currentJacketArray = sizeFilter(sizes, currentJacketArray);
+    // }
+    showJackets(currentJacketArray, true);
+}
+
+searchField.addEventListener("keyup", updateProductWithFilters);
+productFilter.addEventListener("change", updateProductWithFilters);
+/* returns an array with only jackets matching the filter */
+
+function genderFilter(gender, arr) {
+    let result = [];
+    if (gender == "male") {
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].attributes[0].options == "male") {
+                result.push(arr[i]);
+            }
+        }
+    } else {
+        for (let j = 0; j < arr.length; j++) {
+            if (arr[j].attributes[0].options == "female") {
+                result.push(arr[j]);
+            }
+        }
+    }
+    return result;
+}
+
+/* returns an array with only the jackets matching the chosen sizes  */
+
+function sizeFilter(sizes, arr) {
+    let result = [];
+    arr.forEach((element) => {
+        // Adds - to create a unique syntax.
+        let sizeString = "-" + element.sizes.join("-") + "-";
+        console.log(sizeString);
+        for (let k = 0; k < sizes.length; k++) {
+            let sizeMatch = sizeString.search("-" + sizes[k] + "-");
+            if (sizeMatch >= 0) {
+                result.push(element);
+                break;
+            }
+        }
+    });
+
+    return result;
 }

@@ -14,11 +14,12 @@ async function showProductDetails() {
     const averageRating = Math.abs(jacket.average_rating);
     console.log(jacket);
     //console.log("Avg.Rating: " + averageRating);
-    let sizeS,
-        sizeM,
-        sizeL,
-        sizeXL,
-        sizeXXL = "";
+
+    let sizeS = "";
+    let sizeM = "";
+    let sizeL = "";
+    let sizeXL = "";
+    let sizeXXL = "";
 
     let jacketSizes = [];
     jacket.attributes[1].options.forEach((size) => {

@@ -48,10 +48,8 @@ function addOrRemoveFromBasket(num, arr, arridx) {
 let headers = new Headers();
 headers.set("Authorization", "Basic " + btoa(authConsumerKey + ":" + authConsumerSecret));
 
-//const allJackets;
+//let allJackets;
 async function getProducts(id) {
-    //console.log("API v3 attempt: ");
-
     let getProductsURL = baseUrlCMS + "wp-json/wc/v3/products";
     // Fetching all jackets like this, makes it probably slow to use the live-search.
     if (id) {
@@ -72,9 +70,11 @@ async function getProducts(id) {
             const result = await fetch(getProductsURL, { method: "GET", headers: headers });
             data = await result.json();
             //console.log(data);
+            storage.setItem("AllProducts", JSON.stringify(data));
             console.log;
             if (document.location.pathname == "/jackets.html") {
                 console.log("This is the jackets-page");
+                //allJackets = data;
                 showJackets(data);
             } else {
                 return data;
