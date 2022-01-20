@@ -70,3 +70,79 @@ async function getProducts(id) {
         }
     }
 }
+
+// Making banner- carousel
+const topBannerContainer = document.querySelector(".banner_container.top");
+const bottomBannerContainer = document.querySelector(".banner_container.bottom");
+
+//topBannerContainer.innerHTML = topBannerHTML;
+//bottomBannerContainer.innerHTML = topBannerHTML;
+
+async function getBannerData() {
+    let getBannerDataURL = baseUrlCMS + "wp-json/wc/v3/products/?category=25";
+    try {
+        const result = await fetch(getBannerDataURL, { method: "GET", headers: headers });
+        const data = await result.json();
+        return data;
+    } catch (error) {
+        console.log("An error occured fetching the bannerdata");
+    }
+}
+
+let counter = 0;
+function displayBanners(productData) {
+    //console.log(productData);
+    //console.log(productData[0].images[0].src);
+    const imgArray = [
+        "https://tekniskpotet.no/rainydays/wp-content/uploads/2022/01/jacket-id6.jpg",
+        "https://tekniskpotet.no/rainydays/wp-content/uploads/2022/01/jacket-id2.jpg",
+    ];
+    const bannerHTML = `
+    <a href="jacketdetails.html?id=${productData[0].id}" alt="Banner Image" title="banner image">
+        <img src="${productData[0].images[0].src}" class="banner_image" alt="Offer: Banner advertisement for one of our jackets" aria-label="Offer: Banner advertisement for one of our jackets"/>
+    </a>
+    <a href="jacketdetails.html?id=${productData[0].id}" class="banner_text" title="Jacket banner text">"Rainy days": Gets you out of the comfort zone.</a>
+    `;
+    topBannerContainer.innerHTML = bannerHTML;
+    bottomBannerContainer.innerHTML = bannerHTML;
+    const myInterval = setInterval(() => {
+        if (counter >= productData.length) {
+            //console.log("Now resetting...");
+            counter = 0;
+            return;
+        }
+        //console.log(productData[counter].images[0].src);
+        const prodId = productData[counter].id;
+        const prodImg = productData[counter].images[0].src;
+        document.querySelector(".banner_container.top .banner_image").src = prodImg;
+        document.querySelector(".banner_container.bottom .banner_image").src = prodImg;
+        document.querySelector(".banner_container.top .banner_text").href = "jacketdetails.html?id=" + prodId;
+        document.querySelector(".banner_container.top a").href = "jacketdetails.html?id=" + prodId;
+        document.querySelector(".banner_container.bottom .banner_text").href = "jacketdetails.html?id=" + prodId;
+        document.querySelector(".banner_container.bottom a").href = "jacketdetails.html?id=" + prodId;
+        counter++;
+    }, 10000);
+    // Array of images to use.
+    //getBannerData();
+
+    //const prodId = 53;
+    //const prodImg = "../images/pexels-yan-krukov-5792901-500px.jpg";
+
+    // const bannerHTML = `
+    // <a href="jacketsdetails.html?id=${prodId}" alt="Banner Image" title="banner image">
+    //     <img src="${prodImg}" class="banner_image" alt="Offer: Nordic extreme rain jacket for men" aria-label="Offer: Nordic extreme rain jacket for men"/>
+    // </a>
+    // <a href="jacketsdetails.html?id=${prodId}" class="banner_text" title="Jacket banner text">"Nordoc Extreme": Gets you out of the comfort zone.</a>
+    // `;
+    // topBannerContainer.innerHTML = bannerHTML;
+    // bottomBannerContainer.innerHTML = bannerHTML;
+}
+
+//displayBanners();
+getBannerData().then((bannerData) => {
+    displayBanners(bannerData);
+});
+// setInterval(() => {
+//     console.log("Swap image!");
+//     displayBanners();
+// }, 3000);
