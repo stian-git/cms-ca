@@ -65,7 +65,7 @@ async function showProductDetails() {
         jacketReviews.forEach((review) => {
             jacketReviewsHTML += `<img src="../images/${review.rating}-stars.png" aria-label="Rating-stars: ${review.rating}" title="Rating-stars: ${review.rating}">
             <blockquote>${review.review}</blockquote>
-            <p class="reviewername">${review.reviewer}</p>`;
+            <p class="reviewername">${review.reviewer}</p><hr>`;
         });
     }
 
