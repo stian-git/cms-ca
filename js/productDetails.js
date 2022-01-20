@@ -12,41 +12,17 @@ let checkoutbutton;
 async function showProductDetails() {
     jacket = await getProducts(jacketId);
     const averageRating = Math.abs(jacket.average_rating);
-    console.log(jacket);
-    //console.log("Avg.Rating: " + averageRating);
-
-    let sizeS = "";
-    let sizeM = "";
-    let sizeL = "";
-    let sizeXL = "";
-    let sizeXXL = "";
 
     let jacketSizes = [];
     jacket.attributes[1].options.forEach((size) => {
         jacketSizes.push(size.toUpperCase());
     });
+    let allSizesHTML = "";
+
     jacketSizes.forEach((size) => {
-        //Adds a string to each size that are present on the given jacket. Strings that remain blank will not be displayed.
-        switch (size) {
-            case "S":
-                sizeS = `<input type="radio" name="size" id="size-s" value="size-s" hidden="true"><label for="size-s"><img src="../images/size-s.png" aria-label="Size: S"></label>`;
-                break;
-            case "M":
-                sizeM = `<input type="radio" name="size" id="size-m" value="size-m" hidden="true"><label for="size-m"><img src="../images/size-m.png" aria-label="Size: M"></label>`;
-                break;
-            case "L":
-                sizeL = `<input type="radio" name="size" id="size-l" value="size-l" hidden="true"><label for="size-l"><img src="../images/size-l.png" aria-label="Size: L"></label>`;
-                break;
-            case "XL":
-                sizeXL = `<input type="radio" name="size" id="size-xl" value="size-xl" hidden="true"><label for="size-xl"><img src="../images/size-xl.png" aria-label="Size: XL"></label>`;
-                break;
-            case "XXL":
-                sizeXXL = `<input type="radio" name="size" id="size-xxl" value="size-xxl" hidden="true"><label for="size-xxl"><img src="../images/size-xxl.png" aria-label="Size: XXL"></label>`;
-                break;
-            default:
-                break;
-        }
+        allSizesHTML += `<input type="radio" name="size" id="size-${size.toLowerCase()}" value="size-${size.toLowerCase()}" hidden="true"><label for="size-${size.toLowerCase()}"><img src="../images/size-${size.toLowerCase()}.png" aria-label="Size: ${size}"></label>`;
     });
+
     let genderMale = `<input type="radio" name="gender" id="male" value="male" hidden="true"><label for="male" class="gender"><p class="required"><img src="../images/outline_male_red_24dp.png"><span class="tooltip_top tooltip_gendertop">Male</span></p></label>`;
     let genderFemale = `<input type="radio" name="gender" id="female" value="female" hidden="true"><label for="female" class="gender"><p class="required"><img src="../images/outline_female_red_24dp.png"><span class="tooltip_top tooltip_gendertop">Female</span></p></label>`;
     if (jacket.attributes[0].options.length == 1) {
@@ -57,7 +33,6 @@ async function showProductDetails() {
         }
     }
 
-    //console.log("Images: " + jacket.images.length);
     const jacketReviews = await getReviews(jacket.id);
     let jacketReviewsHTML = "<i>There are no reviews for this product yet.</i>";
     if (jacketReviews.length > 0) {
@@ -109,11 +84,7 @@ async function showProductDetails() {
                 </fieldset>
                 <fieldset>
                     <legend>Select Size:</legend>
-                    ${sizeS}
-                    ${sizeM}
-                    ${sizeL}
-                    ${sizeXL}
-                    ${sizeXXL}
+                    ${allSizesHTML}
                 </fieldset>
                 <p class="product-specific__price">${jacket.price} NOK</p>
                 <input type="hidden" value="${jacketId}" id="id" name="id">
@@ -167,10 +138,6 @@ function changeProductImage(newImg) {
 
 showProductDetails();
 
-//let buyButton = document.querySelector("button[type=submit].jacket-cta");
-//console.log(buyButton);
-//buyButton.disabled = true;
-// clears the selections upon loading.
 let selectedSize;
 let selectedGender;
 

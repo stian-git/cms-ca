@@ -163,15 +163,10 @@ function genderFilter(gender, arr) {
 
 function sizeFilter(sizes, arr) {
     let result = [];
-    console.log("FilterSize:");
-    console.log(sizes);
-    console.log(arr);
     arr.forEach((element) => {
         // Adds - to create a unique syntax.
         let sizeString = "-" + element.attributes[1].options.join("-") + "-";
-        console.log(sizeString);
         for (let k = 0; k < sizes.length; k++) {
-            console.log("Looking for: " + sizes[k].toLocaleLowerCase());
             let sizeMatch = sizeString.search("-" + sizes[k].toLocaleLowerCase() + "-");
             if (sizeMatch >= 0) {
                 result.push(element);

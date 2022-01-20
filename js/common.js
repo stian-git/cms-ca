@@ -54,7 +54,6 @@ async function getProducts(id) {
     let getProductsURL = baseUrlCMS + "wp-json/wc/v3/products";
     // Fetching all jackets like this, makes it probably slow to use the live-search.
     if (id) {
-        console.log("Fetching productdetails of ID: " + id);
         getProductsURL = baseUrlCMS + "wp-json/wc/v3/products/" + id;
         try {
             const result = await fetch(getProductsURL, { method: "GET", headers: headers });
