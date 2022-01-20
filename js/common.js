@@ -101,7 +101,7 @@ function displayBanners(productData) {
     <a href="jacketdetails.html?id=${productData[0].id}" alt="Banner Image" title="banner image">
         <img src="${productData[0].images[0].src}" class="banner_image" alt="Offer: Banner advertisement for one of our jackets" aria-label="Offer: Banner advertisement for one of our jackets"/>
     </a>
-    <a href="jacketdetails.html?id=${productData[0].id}" class="banner_text" title="Jacket banner text">"Rainy days": Gets you out of the comfort zone.</a>
+    <a href="jacketdetails.html?id=${productData[0].id}" class="banner_text" title="Jacket banner text">Rainy days - Gets you out of the comfort zone.</a>
     `;
     topBannerContainer.innerHTML = bannerHTML;
     bottomBannerContainer.innerHTML = bannerHTML;
