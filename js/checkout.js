@@ -6,6 +6,13 @@ const shipmentPriceContainer = document.querySelector(".shipmentprice");
 const invoiceFeeContainer = document.querySelector(".invoicefee");
 const totalPriceContainer = document.querySelector(".totalprice");
 
+// Open terms
+function openTerms() {
+    window.open("../terms.html", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,fullscreen=yes");
+}
+
+//
+
 // Fixed prices for fees in basket
 let shipment = 7;
 let invoiceFee = 2;
@@ -150,6 +157,7 @@ async function getProductData() {
     const jacketData = await getProducts();
     getJacketsInBasket(jacketData);
 
+    // Adding and defining these eventlisteners here as they are not in the DOM before the above step:
     const addButtons = document.querySelectorAll(".addbutton");
     const subtractButtons = document.querySelectorAll(".subtractbutton");
     const deleteButtons = document.querySelectorAll(".deletebutton");

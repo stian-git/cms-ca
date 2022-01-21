@@ -42,41 +42,39 @@ headers.set("Authorization", "Basic " + btoa(authConsumerKey + ":" + authConsume
 
 async function getProducts(id) {
     let getProductsURL = baseUrlCMS + "wp-json/wc/v3/products";
-    // Fetching all jackets like this, makes it probably slow to use the live-search.
+    let data;
     if (id) {
+        // Used by Jacketdetails page:
         getProductsURL = baseUrlCMS + "wp-json/wc/v3/products/" + id;
         try {
             const result = await fetch(getProductsURL, { method: "GET", headers: headers });
-            const data = await result.json();
-            //console.log(data);
-            return data;
+            data = await result.json();
         } catch (error) {
-            // jacketsContainer.innerHTML =
-            //     "<p>An error occured retrieving the jackets. Please refresh the page to try again.</p>";
-            console.log("Unable to retrieve jackets from API: " + error);
+            document.querySelector(".jacket-details").innerHTML = "<p>An error occured retrieving the jacket. Please refresh the page to try again.</p>";
+            console.log("Unable to retrieve jacket details from API: " + error);
         }
     } else {
         try {
+            // Used by jackets and checkout page.
             const result = await fetch(getProductsURL, { method: "GET", headers: headers });
             data = await result.json();
-            //console.log(data);
             storage.setItem("AllProducts", JSON.stringify(data));
-            return data;
         } catch (error) {
-            // NB: Below error is not available in the checkout. Maybe missing another place too?
-            jacketsContainer.innerHTML =
-                "<p>An error occured retrieving the jackets. Please refresh the page to try again.</p>";
-            console.log("Unable to retrieve jackets from API: " + error);
+            if (window.location.pathname == "/checkout.html") {
+                // Checkout Page:
+                document.querySelector("main").innerhtml = "<p>An error occured retrieving the basket details. Please refresh the page to try again.</p>";
+            } else {
+                // Jackets page.
+                document.querySelector(".main__jacketlist").innerHTML = "<p>An error occured retrieving the jackets. Please refresh the page to try again.</p>";
+            }
         }
     }
+    return data;
 }
 
 // Making banner- carousel
 const topBannerContainer = document.querySelector(".banner_container.top");
 const bottomBannerContainer = document.querySelector(".banner_container.bottom");
-
-//topBannerContainer.innerHTML = topBannerHTML;
-//bottomBannerContainer.innerHTML = topBannerHTML;
 
 async function getBannerData() {
     let getBannerDataURL = baseUrlCMS + "wp-json/wc/v3/products/?category=25";
@@ -93,10 +91,7 @@ let counter = 0;
 function displayBanners(productData) {
     //console.log(productData);
     //console.log(productData[0].images[0].src);
-    const imgArray = [
-        "https://tekniskpotet.no/rainydays/wp-content/uploads/2022/01/jacket-id6.jpg",
-        "https://tekniskpotet.no/rainydays/wp-content/uploads/2022/01/jacket-id2.jpg",
-    ];
+    const imgArray = ["https://tekniskpotet.no/rainydays/wp-content/uploads/2022/01/jacket-id6.jpg", "https://tekniskpotet.no/rainydays/wp-content/uploads/2022/01/jacket-id2.jpg"];
     const bannerHTML = `
     <a href="jacketdetails.html?id=${productData[0].id}" alt="Banner Image" title="banner image">
         <img src="${productData[0].images[0].src}" class="banner_image" alt="Offer: Banner advertisement for one of our jackets" aria-label="Offer: Banner advertisement for one of our jackets"/>

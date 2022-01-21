@@ -58,9 +58,9 @@ async function showProductDetails() {
 
     jacketContainer.innerHTML = `
         <section class="jacketdetails__images">
-            <img src="${jacket.images[0].src.replace(".jpg", "-300x300.jpg")}" alt="${
+            <img src="${jacket.images[0].src.replace(".jpg", "-300x300.jpg")}" alt="${jacket.name}" class="product-image" title="${
         jacket.name
-    }" class="product-image" title="${jacket.name}" onerror="this.style.display='none'"/>
+    }" onerror="this.style.display='none'"/>
             <div class="product-image_thumbnails">
                 ${thumbsHTML}
             </div>
@@ -129,7 +129,8 @@ async function getReviews(id) {
         const result = await fetch(getProductReviewUrl, { method: "GET", headers: headers });
         reviewArray = await result.json();
     } catch (error) {
-        console.log("Catching reviews failed, returning empty array");
+        console.log("Catching reviews failed, returning empty array: " + error);
+        document.querySelector(".jacketdetails__reviews").innerHTML = "<h2>Cathing reviews failed. Try reloading the page.</h2>";
     }
     return reviewArray;
 }
@@ -137,8 +138,6 @@ async function getReviews(id) {
 function changeProductImage(newImg) {
     const mainImageContainer = document.querySelector(".product-image");
     mainImageContainer.src = newImg;
-    // Below line is to make the page recover if the selected img is missing.
-    //mainImageContainer.style.display = "inline";
 }
 
 showProductDetails();
