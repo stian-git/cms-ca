@@ -51,7 +51,6 @@ async function getProducts(id) {
             data = await result.json();
         } catch (error) {
             document.querySelector(".jacket-details").innerHTML = "<p>An error occured retrieving the jacket. Please refresh the page to try again.</p>";
-            console.log("Unable to retrieve jacket details from API: " + error);
         }
     } else {
         try {
@@ -72,7 +71,7 @@ async function getProducts(id) {
     return data;
 }
 
-// Making banner- carousel
+// banner- carousel
 const topBannerContainer = document.querySelector(".banner_container.top");
 const bottomBannerContainer = document.querySelector(".banner_container.bottom");
 
@@ -83,14 +82,12 @@ async function getBannerData() {
         const data = await result.json();
         return data;
     } catch (error) {
-        console.log("An error occured fetching the bannerdata");
+        // No error is displayed because this is not an important element.
     }
 }
 
 let counter = 0;
 function displayBanners(productData) {
-    //console.log(productData);
-    //console.log(productData[0].images[0].src);
     const imgArray = ["https://tekniskpotet.no/rainydays/wp-content/uploads/2022/01/jacket-id6.jpg", "https://tekniskpotet.no/rainydays/wp-content/uploads/2022/01/jacket-id2.jpg"];
     const bannerHTML = `
     <a href="jacketdetails.html?id=${productData[0].id}" alt="Banner Image" title="banner image">
@@ -102,11 +99,9 @@ function displayBanners(productData) {
     bottomBannerContainer.innerHTML = bannerHTML;
     const myInterval = setInterval(() => {
         if (counter >= productData.length) {
-            //console.log("Now resetting...");
             counter = 0;
             return;
         }
-        //console.log(productData[counter].images[0].src);
         const prodId = productData[counter].id;
         const prodImg = productData[counter].images[0].src;
         document.querySelector(".banner_container.top .banner_image").src = prodImg;
@@ -117,27 +112,9 @@ function displayBanners(productData) {
         document.querySelector(".banner_container.bottom a").href = "jacketdetails.html?id=" + prodId;
         counter++;
     }, 10000);
-    // Array of images to use.
-    //getBannerData();
-
-    //const prodId = 53;
-    //const prodImg = "../images/pexels-yan-krukov-5792901-500px.jpg";
-
-    // const bannerHTML = `
-    // <a href="jacketsdetails.html?id=${prodId}" alt="Banner Image" title="banner image">
-    //     <img src="${prodImg}" class="banner_image" alt="Offer: Nordic extreme rain jacket for men" aria-label="Offer: Nordic extreme rain jacket for men"/>
-    // </a>
-    // <a href="jacketsdetails.html?id=${prodId}" class="banner_text" title="Jacket banner text">"Nordoc Extreme": Gets you out of the comfort zone.</a>
-    // `;
-    // topBannerContainer.innerHTML = bannerHTML;
-    // bottomBannerContainer.innerHTML = bannerHTML;
 }
 
-//displayBanners();
+// Make sure we retrieve the productData before adding the banner.
 getBannerData().then((bannerData) => {
     displayBanners(bannerData);
 });
-// setInterval(() => {
-//     console.log("Swap image!");
-//     displayBanners();
-// }, 3000);

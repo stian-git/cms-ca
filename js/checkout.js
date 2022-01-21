@@ -11,8 +11,6 @@ function openTerms() {
     window.open("../terms.html", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,fullscreen=yes");
 }
 
-//
-
 // Fixed prices for fees in basket
 let shipment = 7;
 let invoiceFee = 2;
@@ -20,12 +18,13 @@ let invoiceFee = 2;
 // Collect items from the basket and prepare the data to be displayed.
 function getJacketsInBasket(allJackets) {
     let totalPrice = 0;
-    basketItemContainer.innerHTML = `<tr class="rowheader">
-  <td class="name basket_headertext">Name</td>
-  <td class="basket_headertext">Qty</td>
-  <td class="basket_headertext">Price (per)</td>
-  <td class="basket_headertext">Delete</td>
-</tr>`;
+    basketItemContainer.innerHTML = `
+    <tr class="rowheader">
+        <td class="name basket_headertext">Name</td>
+        <td class="basket_headertext">Qty</td>
+        <td class="basket_headertext">Price (per)</td>
+        <td class="basket_headertext">Delete</td>
+    </tr>`;
     // Handle cases where basket is empty:
     basketItemContainer.style.display = "none";
     basketSummaryContainer.style.display = "none";
@@ -104,27 +103,27 @@ function displayBasketItem(item) {
         default:
             break;
     }
-    const itemHTML = `<tr>
-  <td class="name">
-    <img src="${item.img}" class="basket_productimage" />
-    <p class="required">
-      <img src="${sizeImage}" class="basket_navbutton" />
-      <img src="${genderImage}" class="basket_navbutton" />
-      <span class="tooltip_top">${sizeText}, ${genderText}</span>
-    </p>
-
-    <p class="basket_productname">${item.name}</p>
-  </td>
-  <td>
-  <img src="./images/MinusButton.png" class="basket_navbutton subtractbutton arrId-${item.basketArrayIndex}" aria-label="Subtract 1" title="Subtract 1" />  
-    <p class="basket_qty" aria-label="Current quantity">${item.qty}</p>
-    <img src="./images/PlusButton.png" class="basket_navbutton addbutton arrId-${item.basketArrayIndex}" aria-label="Add 1" title="Add 1" />  
-  </td>
-  <td>${item.price}</td>
-  <td>
-    <img src="./images/X-Button.png" class="basket_navbutton deletebutton arrId-${item.basketArrayIndex}" aria-label="Delete-button" title="Delete" />
-  </td>
-</tr>`;
+    const itemHTML = `
+    <tr>
+        <td class="name">
+            <img src="${item.img}" class="basket_productimage" />
+            <p class="required">
+                <img src="${sizeImage}" class="basket_navbutton" />
+                <img src="${genderImage}" class="basket_navbutton" />
+                <span class="tooltip_top">${sizeText}, ${genderText}</span>
+            </p>
+            <p class="basket_productname">${item.name}</p>
+        </td>
+        <td>
+            <img src="./images/MinusButton.png" class="basket_navbutton subtractbutton arrId-${item.basketArrayIndex}" aria-label="Subtract 1" title="Subtract 1" />  
+            <p class="basket_qty" aria-label="Current quantity">${item.qty}</p>
+            <img src="./images/PlusButton.png" class="basket_navbutton addbutton arrId-${item.basketArrayIndex}" aria-label="Add 1" title="Add 1" />  
+        </td>
+        <td>${item.price}</td>
+        <td>
+            <img src="./images/X-Button.png" class="basket_navbutton deletebutton arrId-${item.basketArrayIndex}" aria-label="Delete-button" title="Delete" />
+        </td>
+    </tr>`;
     basketItemContainer.innerHTML += itemHTML;
 }
 
@@ -157,7 +156,7 @@ async function getProductData() {
     const jacketData = await getProducts();
     getJacketsInBasket(jacketData);
 
-    // Adding and defining these eventlisteners here as they are not in the DOM before the above step:
+    // The below eventlisteners are defined here because they are not in the DOM before the above step:
     const addButtons = document.querySelectorAll(".addbutton");
     const subtractButtons = document.querySelectorAll(".subtractbutton");
     const deleteButtons = document.querySelectorAll(".deletebutton");

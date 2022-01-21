@@ -86,8 +86,6 @@ function reValidateUnemptyFields() {
     checkAllFields();
 }
 
-// Validations:
-
 // Common functions
 function validateEmail(email) {
     const regEx = /\S+@\S+\.\S+/;
@@ -123,6 +121,8 @@ function toggleValidation(field, status) {
         submitButton.disabled = true;
     }
 }
+
+// Validations:
 
 // Validate name:
 

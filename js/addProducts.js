@@ -15,17 +15,20 @@ function showJackets(jackets, filterUse = false) {
         searchString.value = null;
     }
     jacketsContainer.innerHTML = "";
+    // If there are no jackets to display:
     if (jackets.length == 0) {
         jacketsContainer.innerHTML = `<div class="error nojacketstoshow">
                                         <p>0 jackets are currently matching your search and/or filter.</p>
                                         <p>Please modify your filter or clear the search field to resume</>
                                     </div>`;
     }
+    // Generate HTML elements per product and displays them.
     for (let i = 0; i < jackets.length; i++) {
         let productLink = `<p class="jacket-cta" title="${jackets[i].name}">View</p>`;
         let bestbuyIcon = ``;
         let maleIcon = ``;
         let femaleIcon = ``;
+        // Adds the BestBuy-icon.
         if (jackets[i].featured === true) {
             productLink = `<p class="jacket-cta jacketsale" title="${jackets[i].name}">On Sale</p>`;
             bestbuyIcon = `
@@ -37,6 +40,7 @@ function showJackets(jackets, filterUse = false) {
                 <text id="Best_buy_" data-name="Best buy!" transform="translate(14 46)" fill="#d0d9d1" font-size="16" font-family="Oswald"><tspan x="0" y="0">Best buy!</tspan></text>
             </svg>`;
         }
+        // Genders
         let prodGenderMale = true;
         let prodGenderFemale = true;
         if (jackets[i].attributes[0].options.length == 1) {
@@ -46,7 +50,6 @@ function showJackets(jackets, filterUse = false) {
                 prodGenderFemale = false;
             }
         }
-
         if (prodGenderMale === true) {
             maleIcon = `
                   <i class="required gender">
@@ -61,6 +64,7 @@ function showJackets(jackets, filterUse = false) {
                   <span class="tooltip_top gender">Female</span>
                 </i>`;
         }
+        // Display each jacket in their own container:
         jacketsContainer.innerHTML += `
             <a href="jacketdetails.html?id=${jackets[i].id}">
                 <div class="jacketcontainer">
@@ -96,7 +100,7 @@ function searchProducts(str) {
     }
     return result;
 }
-
+// update visible products when filters are enabled.
 function updateProductWithFilters() {
     currentJacketArray = JSON.parse(storage.getItem("AllProducts"));
     if (!searchField.value == "") {
@@ -160,6 +164,7 @@ function sizeFilter(sizes, arr) {
     return result;
 }
 
+// Make sure we retrieve the data from the API before we attempt to display them.
 getProducts().then((allJackets) => {
     showJackets(allJackets);
 });

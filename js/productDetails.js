@@ -5,14 +5,12 @@ const jacketContainer = document.querySelector(".jacket-details");
 const jacketName = document.querySelector(".jacketname__h1");
 let buyButton;
 let checkoutbutton;
-//console.log(jacketId);
-
-// clears the size-variables for each run.
 
 async function showProductDetails() {
     jacket = await getProducts(jacketId);
     const averageRating = Math.abs(jacket.average_rating);
 
+    // Generate jackets-html
     let jacketSizes = [];
     jacket.attributes[1].options.forEach((size) => {
         jacketSizes.push(size.toUpperCase());
@@ -20,11 +18,29 @@ async function showProductDetails() {
     let allSizesHTML = "";
 
     jacketSizes.forEach((size) => {
-        allSizesHTML += `<input type="radio" name="size" id="size-${size.toLowerCase()}" value="size-${size.toLowerCase()}" hidden="true"><label for="size-${size.toLowerCase()}"><img src="../images/size-${size.toLowerCase()}.png" aria-label="Size: ${size}"></label>`;
+        allSizesHTML += `
+        <input type="radio" name="size" id="size-${size.toLowerCase()}" value="size-${size.toLowerCase()}" hidden="true">
+        <label for="size-${size.toLowerCase()}">
+            <img src="../images/size-${size.toLowerCase()}.png" aria-label="Size: ${size}">
+        </label>`;
     });
-
-    let genderMale = `<input type="radio" name="gender" id="male" value="male" hidden="true"><label for="male" class="gender"><p class="required"><img src="../images/outline_male_red_24dp.png"><span class="tooltip_top tooltip_gendertop">Male</span></p></label>`;
-    let genderFemale = `<input type="radio" name="gender" id="female" value="female" hidden="true"><label for="female" class="gender"><p class="required"><img src="../images/outline_female_red_24dp.png"><span class="tooltip_top tooltip_gendertop">Female</span></p></label>`;
+    // Generate gender-html
+    let genderMale = `
+        <input type="radio" name="gender" id="male" value="male" hidden="true">
+        <label for="male" class="gender">
+            <p class="required">
+                <img src="../images/outline_male_red_24dp.png">
+                <span class="tooltip_top tooltip_gendertop">Male</span>
+            </p>
+        </label>`;
+    let genderFemale = `
+        <input type="radio" name="gender" id="female" value="female" hidden="true">
+        <label for="female" class="gender">
+            <p class="required">
+                <img src="../images/outline_female_red_24dp.png">
+                <span class="tooltip_top tooltip_gendertop">Female</span>
+            </p>
+        </label>`;
     if (jacket.attributes[0].options.length == 1) {
         if (jacket.attributes[0].options[0] == "female") {
             genderMale = "";
@@ -32,78 +48,75 @@ async function showProductDetails() {
             genderFemale = "";
         }
     }
-
+    // Generate reviews-html
     const jacketReviews = await getReviews(jacket.id);
     let jacketReviewsHTML = "<i>There are no reviews for this product yet.</i>";
     if (jacketReviews.length > 0) {
         jacketReviewsHTML = "";
         jacketReviews.forEach((review) => {
-            jacketReviewsHTML += `<img src="../images/${review.rating}-stars.png" aria-label="Rating-stars: ${review.rating}" title="Rating-stars: ${review.rating}">
-            <blockquote>${review.review}</blockquote>
-            <p class="reviewername">${review.reviewer}</p><hr>`;
+            jacketReviewsHTML += `
+                <img src="../images/${review.rating}-stars.png" aria-label="Rating-stars: ${review.rating}" title="Rating-stars: ${review.rating}">
+                <blockquote>${review.review}</blockquote>
+                <p class="reviewername">${review.reviewer}</p><hr>`;
         });
     }
-
+    // Generate thumbs-html
     let thumbsHTML = "";
-
     for (let i = 0; i < jacket.images.length; i++) {
         let thumbImage = jacket.images[i].src.replace(".jpg", "-150x150.jpg");
         let fullsizeImage = "changeProductImage(`" + jacket.images[i].src.replace(".jpg", "-450x450.jpg") + "`)";
         thumbsHTML += `
-        <div>
-            <img src="${thumbImage}" alt="${jacket.name}" 
-        class="thumbimage" onclick="${fullsizeImage}" onerror="this.style.display='none'"/>
-        </div>`;
+            <div>
+                <img src="${thumbImage}" alt="${jacket.name}" class="thumbimage" onclick="${fullsizeImage}" onerror="this.style.display='none'"/>
+            </div>`;
     }
-
+    // Display the generated html
     jacketContainer.innerHTML = `
-        <section class="jacketdetails__images">
-            <img src="${jacket.images[0].src.replace(".jpg", "-300x300.jpg")}" alt="${jacket.name}" class="product-image" title="${
-        jacket.name
-    }" onerror="this.style.display='none'"/>
-            <div class="product-image_thumbnails">
-                ${thumbsHTML}
-            </div>
-        </section>
-        <section class="jacketdetails__intro_form">
-            <h3>${jacket.name}</h3>
-            <p class="ratingstars">
-                <a href="#jacketdetails_reviews" title="View Reviews">
+    <section class="jacketdetails__images">
+        <img src="${jacket.images[0].src.replace(".jpg", "-300x300.jpg")}" alt="${jacket.name}" class="product-image" title="${jacket.name}" onerror="this.style.display='none'"/>
+        <div class="product-image_thumbnails">${thumbsHTML}</div>
+    </section>
+    <section class="jacketdetails__intro_form">
+        <h3>${jacket.name}</h3>
+        <p class="ratingstars">
+            <a href="#jacketdetails_reviews" title="View Reviews">
                 <img src="../images/${averageRating}-stars.png" aria-label="Review Stars: ${averageRating}">
-                </a>
-            </p>
-            ${jacket.short_description}
-            <p>
-                <a href="#jacket_details" alt="Read details for this jacket" title="Read details about this jacket">Read more...</a>
-            </p>
-            <form action="checkout.html" class="form_orderdetails" onsubmit="return false">
-                <fieldset>
-                    <legend>Select Gender:</legend>
-                    ${genderFemale}
-                    ${genderMale}
-                </fieldset>
-                <fieldset>
-                    <legend>Select Size:</legend>
-                    ${allSizesHTML}
-                </fieldset>
-                <p class="product-specific__price">${jacket.price} NOK</p>
-                <input type="hidden" value="${jacketId}" id="id" name="id">
-                <button type="submit" class="jacket-cta addtobasket" aria-label="Click to buy now">Add to basket</button>
-                <a href="checkout.html" title="Checkout"><button type="button" class="jacket-cta checkout" aria-label="Click to buy now">Checkout</button></a>
-            </form>
-        </div>
-        </section>
-        <section class="jacketdetails__details">
-            <h2 id="jacket_details">Details</h2>
-            <p>${jacket.description}</p>
-            <p><a href="#top" alt="Scroll to the top" title="Scroll to the top of page">To the top...</a></p>
-
-        </section>
-        <section class="jacketdetails__reviews">
-            <h2 id="jacketdetails_reviews">Reviews</h2>
-            ${jacketReviewsHTML}
-        </section>`;
-
+            </a>
+        </p>
+        ${jacket.short_description}
+        <p>
+            <a href="#jacket_details" alt="Read details for this jacket" title="Read details about this jacket">Read more...</a>
+        </p>
+        <form action="checkout.html" class="form_orderdetails" onsubmit="return false">
+            <fieldset>
+                <legend>Select Gender:</legend>
+                ${genderFemale}
+                ${genderMale}
+            </fieldset>
+            <fieldset>
+                <legend>Select Size:</legend>
+                ${allSizesHTML}
+            </fieldset>
+            <p class="product-specific__price">${jacket.price} NOK</p>
+            <input type="hidden" value="${jacketId}" id="id" name="id">
+            <button type="submit" class="jacket-cta addtobasket" aria-label="Click to buy now">Add to basket</button>
+            <a href="checkout.html" title="Checkout">
+                <button type="button" class="jacket-cta checkout" aria-label="Click to buy now">Checkout</button>
+            </a>
+        </form>
+    </section>
+    <section class="jacketdetails__details">
+        <h2 id="jacket_details">Details</h2>
+        <p>${jacket.description}</p>
+        <p>
+            <a href="#top" alt="Scroll to the top" title="Scroll to the top of page">To the top...</a>
+        </p>
+    </section>
+    <section class="jacketdetails__reviews">
+        <h2 id="jacketdetails_reviews">Reviews</h2>
+        ${jacketReviewsHTML}
+    </section>`;
+    // Disabled the buyButton by default. (requires selections)
     buyButton = document.querySelector("button[type=submit].jacket-cta");
     buyButton.disabled = true;
     buyButton.addEventListener("click", addToBasket);
@@ -122,6 +135,7 @@ async function showProductDetails() {
     }
 }
 
+// Retrieve the reviews of the current product:
 async function getReviews(id) {
     let getProductReviewUrl = baseUrlCMS + "wp-json/wc/v3/products/reviews/?product=" + id;
     let reviewArray = [];
@@ -129,12 +143,11 @@ async function getReviews(id) {
         const result = await fetch(getProductReviewUrl, { method: "GET", headers: headers });
         reviewArray = await result.json();
     } catch (error) {
-        console.log("Catching reviews failed, returning empty array: " + error);
         document.querySelector(".jacketdetails__reviews").innerHTML = "<h2>Cathing reviews failed. Try reloading the page.</h2>";
     }
     return reviewArray;
 }
-
+// Replace the main photo with the chosen thumb.
 function changeProductImage(newImg) {
     const mainImageContainer = document.querySelector(".product-image");
     mainImageContainer.src = newImg;
@@ -142,6 +155,7 @@ function changeProductImage(newImg) {
 
 showProductDetails();
 
+// define the selected size and gender as they are used in different functions.
 let selectedSize;
 let selectedGender;
 
@@ -158,7 +172,7 @@ function checkSections() {
 
 // Adds item to basket, shows checkout-button, updates basket count, and displays a confirmation of the action to the user.
 function addToBasket(event) {
-    //event.preventDefault();
+    event.preventDefault(); // Concider to remove this.
     let jacketData = `${jacketId},${selectedSize.value},${selectedGender.value},1`;
     checkoutbutton.style.display = "inline-block";
     addToStorage(jacketData);
@@ -173,7 +187,6 @@ function addToBasket(event) {
 
 // updates the storage with new item.
 function addToStorage(str) {
-    // clear the basket:
     let currentBasket = [];
     // Check if something is in the basket already:
     if (storage.getItem("Basket")) {
